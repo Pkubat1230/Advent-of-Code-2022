@@ -1,0 +1,45 @@
+---
+title: "2022Day1"
+author: "Paul Kubat"
+date: "12/1/2022"
+output: html_document
+---
+
+```{r}
+##load data and create data frame
+library(readxl)
+day1 <- read.csv("C:/Users/pkuba/Desktop/2022Day1.txt",blank.lines.skip=FALSE,header = FALSE)
+df <- data.frame(Elf=as.numeric(character()),
+                 Calories=as.numeric(character(),
+                 stringsAsFactors=FALSE))
+```
+
+```{r}
+#create values
+rows <- nrow(day1)
+MaxCalories <- 0
+CalorieCount <- 0
+elf <- 1
+
+#loop through each row
+for (i in 1:rows) {
+  #if value is not NA then add to the calorie counter for this elf
+  if(!is.na(day1[i,])){
+    CalorieCount <- CalorieCount + day1[i,]
+  }else{
+    #if the row is NA, add a record to the data frame stamping the current elf and the cummulative calorie count
+    df[nrow(df) + 1,] <- c(elf, CalorieCount)
+        CalorieCount <- 0
+        elf <- elf + 1
+  }
+  #Check the current CalorieCount vs the Max value and update it if neccessary
+  if(CalorieCount > MaxCalories){
+    MaxCalories <- CalorieCount
+  }
+}
+#sort the data frame by Calories
+df <- df[order(df$Calories, decreasing = TRUE),]
+
+paste("The Most Calories is: ", head(df$Calories,1))
+paste("The Highest Three Calories is: ",sum(head(df,3)$Calories))
+```
